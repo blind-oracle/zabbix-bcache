@@ -1,12 +1,12 @@
 # zabbix-bcache
 
-Zabbix template to monitor BCache - Linux block device caching layer
+Zabbix template & script to monitor BCache - Linux block device caching layer
 
 ## Features
 
 - Low level discovery of BCache devices (bcacheN), Cache sets and Cache devices
 - Collection of all important metrics
-- Several triggers
+- Several triggers (IO errors, state etc)
 - Single Python script to do discovery & get items
 - Usage of dependent items & jsonpath - only a single call per device type to get a JSON
 - Zabbix agent passive mode
@@ -18,7 +18,7 @@ Zabbix template to monitor BCache - Linux block device caching layer
 
 ## Installation
 
-- Put `bcache.conf` info `/etc/zabbix/zabbix_agentd.d` directory
+- Put `bcache.conf` into `/etc/zabbix/zabbix_agentd.d` directory
 - Put `bcache.py` into `/etc/zabbix/scripts` directory.
   Or in any other, but you'll have to edit `bcache.conf` then
 - Restart `zabbix-agentd`
