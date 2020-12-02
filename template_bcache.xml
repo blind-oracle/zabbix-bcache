@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-12-02T14:32:04Z</date>
+    <date>2020-12-02T17:49:22Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -205,7 +205,7 @@
                             </master_item>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{last()}&gt;0</expression>
+                                    <expression>{last()}&gt;{$BCACHE_IO_ERRORS_THRESHOLD}</expression>
                                     <name>BCache: IO errors detected on device {#BCDEV}</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
@@ -266,7 +266,7 @@
                             </master_item>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{regexp(&quot;^(clean|dirty)$&quot;)}=0</expression>
+                                    <expression>{regexp({$BCACHE_EXPECTED_STATES})}=0</expression>
                                     <name>BCache: Device {#CDEV} is in unexpected state</name>
                                     <priority>DISASTER</priority>
                                 </trigger_prototype>
@@ -297,7 +297,7 @@
                             </master_item>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{last()}&lt;&gt;1</expression>
+                                    <expression>{last()}&lt;&gt;{$BCACHE_WRITEBACK_ENABLED}</expression>
                                     <name>BCache: Device {#CDEV} writeback is not running</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
@@ -370,7 +370,7 @@
                             </master_item>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{last()}&gt;0</expression>
+                                    <expression>{last()}&gt;{$BCACHE_IO_ERRORS_THRESHOLD}</expression>
                                     <name>BCache: IO errors detected on cache device {#CDEV}</name>
                                     <priority>HIGH</priority>
                                 </trigger_prototype>
@@ -561,7 +561,7 @@
                             </master_item>
                             <trigger_prototypes>
                                 <trigger_prototype>
-                                    <expression>{max(600)}&lt;60</expression>
+                                    <expression>{max(600)}&lt;{$BCACHE_CACHE_FREE_PCT}</expression>
                                     <name>BCache Cacheset {#CSET}: Low available cache</name>
                                     <priority>AVERAGE</priority>
                                 </trigger_prototype>
@@ -700,6 +700,13 @@
                             <master_item>
                                 <key>bcache.vars[cset, {#CSET}]</key>
                             </master_item>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{min({$BCACHE_CONGEST_TIME})}&gt;{$BCACHE_CONGEST_THRESHOLD}</expression>
+                                    <name>BCache Cacheset {#CSET}: Congested</name>
+                                    <priority>AVERAGE</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
                         </item_prototype>
                         <item_prototype>
                             <name>{#CSET} - Root Usage</name>
@@ -759,6 +766,32 @@
                     </item_prototypes>
                 </discovery_rule>
             </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$BCACHE_CACHE_FREE_PCT}</macro>
+                    <value>60</value>
+                </macro>
+                <macro>
+                    <macro>{$BCACHE_CONGEST_THRESHOLD}</macro>
+                    <value>0</value>
+                </macro>
+                <macro>
+                    <macro>{$BCACHE_CONGEST_TIME}</macro>
+                    <value>1800</value>
+                </macro>
+                <macro>
+                    <macro>{$BCACHE_EXPECTED_STATES}</macro>
+                    <value>^(clean|dirty)$</value>
+                </macro>
+                <macro>
+                    <macro>{$BCACHE_IO_ERRORS_THRESHOLD}</macro>
+                    <value>0</value>
+                </macro>
+                <macro>
+                    <macro>{$BCACHE_WRITEBACK_ENABLED}</macro>
+                    <value>1</value>
+                </macro>
+            </macros>
         </template>
     </templates>
     <value_maps>
