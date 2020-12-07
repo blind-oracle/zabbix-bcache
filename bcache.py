@@ -49,6 +49,15 @@ ITEMS = {
     }
 }
 
+PRIORITY_STATS = {
+    'unused',
+    'clean',
+    'dirty',
+    'metadata',
+    'average',
+    'sectors_per_q'
+}
+
 PERIODS = ['five_minute', 'hour', 'day', 'total']
 
 UNITS = {
@@ -70,7 +79,7 @@ def parse(v):
     for t in CONV:
         try:
             return t(v)
-        except:
+        except BaseException:
             continue
 
     return v
@@ -131,6 +140,19 @@ def read_vars(dir, vars=None):
     return o
 
 
+def read_priority_stats(fn):
+    o = {}
+    with open(fn, 'r') as f:
+        for l in f.readlines():
+            m = re.match(r'^([\w\s]+):\s+(\d+)', l)
+            if m:
+                k, v = m.group(1, 2)
+                k = k.lower().replace(' ', '_')
+                if k in PRIORITY_STATS:
+                    o[k] = int(v)
+    return o
+
+
 def get_vars(t, dev, stats=False, period='day'):
     if t == TYPE_CDEV:
         dirs = [{x[0]:x[1] for x in discover(t)}[dev]]
@@ -143,10 +165,20 @@ def get_vars(t, dev, stats=False, period='day'):
     if stats:
         dirs.append(f'stats_{period}')
 
-    return read_vars(
+    v = read_vars(
         os.path.join(*dirs),
         ITEMS[t] if not stats else None
     )
+
+    if t == TYPE_CDEV:
+        v = {
+            **v,
+            'pstats': read_priority_stats(
+                os.path.join(*dirs, 'priority_stats')
+            )
+        }
+
+    return v
 
 
 a1 = sys.argv[1]

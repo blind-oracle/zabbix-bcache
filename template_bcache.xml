@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2020-12-02T17:49:22Z</date>
+    <date>2020-12-07T09:52:52Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -342,6 +342,94 @@
                                 <step>
                                     <type>CHANGE_PER_SECOND</type>
                                     <params/>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>bcache.vars[cdev, {#CDEV}]</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#CDEV} - Cache Clean</name>
+                            <type>DEPENDENT</type>
+                            <key>bcache.cdev.cache_clean[{#CDEV}]</key>
+                            <delay>0</delay>
+                            <history>30d</history>
+                            <units>%</units>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>BCache Cache Devices</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.vars.pstats.clean</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>bcache.vars[cdev, {#CDEV}]</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#CDEV} - Cache Dirty</name>
+                            <type>DEPENDENT</type>
+                            <key>bcache.cdev.cache_dirty[{#CDEV}]</key>
+                            <delay>0</delay>
+                            <history>30d</history>
+                            <units>%</units>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>BCache Cache Devices</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.vars.pstats.dirty</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>bcache.vars[cdev, {#CDEV}]</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#CDEV} - Cache Metadata</name>
+                            <type>DEPENDENT</type>
+                            <key>bcache.cdev.cache_metadata[{#CDEV}]</key>
+                            <delay>0</delay>
+                            <history>30d</history>
+                            <units>%</units>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>BCache Cache Devices</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.vars.pstats.metadata</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>bcache.vars[cdev, {#CDEV}]</key>
+                            </master_item>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>{#CDEV} - Cache Unused</name>
+                            <type>DEPENDENT</type>
+                            <key>bcache.cdev.cache_unused[{#CDEV}]</key>
+                            <delay>0</delay>
+                            <history>30d</history>
+                            <units>%</units>
+                            <application_prototypes>
+                                <application_prototype>
+                                    <name>BCache Cache Devices</name>
+                                </application_prototype>
+                            </application_prototypes>
+                            <preprocessing>
+                                <step>
+                                    <type>JSONPATH</type>
+                                    <params>$.vars.pstats.unused</params>
                                 </step>
                             </preprocessing>
                             <master_item>
